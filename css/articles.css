@@ -1,0 +1,489 @@
+/* ============================================================
+   STARS — Articles hub + category collection pages
+   Scope: articles.html, thebasics.html, starsopinions.html,
+          news.html, laws.html, management.html
+   ============================================================ */
+
+/* ---------- 1. HUB HERO BAND ---------- */
+.hub-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(340px, 54vh, 540px);
+  padding: calc(var(--nav-h) + clamp(40px, 8vh, 92px)) 0 clamp(44px, 7vh, 84px);
+}
+.hub-hero-bg {
+  position: absolute;
+  left: 0; right: 0;
+  top: -12%;
+  width: 100%;
+  height: 124%;
+  object-fit: cover;
+  object-position: center 45%;
+  pointer-events: none;
+}
+.hub-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(4,7,15,.72) 0%,
+    rgba(4,7,15,.72) 55%,
+    rgba(4,7,15,.96) 100%);
+  pointer-events: none;
+}
+.hub-hero-inner {
+  position: relative;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.hub-hero .eyebrow { margin-bottom: 24px; }
+.hub-title {
+  font-size: clamp(3.2rem, 7.5vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -.015em;
+  margin: 0 0 clamp(26px, 4vh, 42px);
+  max-width: 14ch;
+}
+.hub-hero .hairline { margin-bottom: 22px; }
+.hub-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px clamp(16px, 2.6vw, 32px);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hub-readout strong { color: var(--ink-1); font-weight: 500; }
+.hub-readout .ro-sep { opacity: .55; }
+
+/* ---------- 2. HUB DOSSIER ROWS (editorial index) ---------- */
+.dossier-list {
+  list-style: none;
+  margin: 0;
+  padding: clamp(56px, 9vh, 96px) 0 0;
+}
+.dossier {
+  display: grid;
+  grid-template-areas: "text media";
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(38px, 5.5vw, 88px);
+  align-items: center;
+}
+.dossier + .dossier {
+  border-top: 1px solid var(--hair);
+  margin-top: clamp(40px, 6vh, 60px);
+  padding-top: clamp(40px, 6vh, 60px);
+}
+.dossier:nth-of-type(even) {
+  grid-template-areas: "media text";
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+.dossier-text { grid-area: text; }
+.dossier-media { grid-area: media; margin: 0; }
+
+.dossier-index {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: clamp(18px, 2.5vw, 28px);
+}
+.dossier-index .idx {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  color: var(--brass);
+}
+.dossier-index .rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hair), transparent);
+}
+.dossier-index .meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.dossier-title {
+  font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+.dossier-text > p {
+  color: var(--ink-2);
+  max-width: 54ch;
+  margin: 0 0 clamp(24px, 3vw, 34px);
+}
+
+/* ---------- 3. IMAGE FRAMES (ticks + Ken Burns + caption) ---------- */
+.media-frame { display: block; position: relative; }
+.media-crop { display: block; overflow: hidden; }
+.media-crop img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 1.4s var(--ease-out);
+}
+.media-frame--portrait .media-crop img { aspect-ratio: 3 / 4; }
+.media-frame:hover .media-crop img { transform: scale(1.05); }
+.media-caption {
+  display: block;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--hair-soft);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* ---------- 4. CATEGORY HEADER + FULL-BLEED BAND ---------- */
+/* breadcrumb already offsets the fixed nav — don't double-stack */
+body.category-page .cat-head { padding-top: clamp(10px, 2.5vh, 26px); }
+/* hub: hero band handles the nav offset */
+body.articles-page .page-shell { padding-top: 0; }
+.cat-head { padding-bottom: clamp(30px, 4.5vh, 46px); }
+.cat-head .eyebrow { margin-bottom: 22px; }
+.cat-title {
+  font-size: clamp(2.5rem, 5.4vw, 3.8rem);
+  line-height: 1.04;
+  letter-spacing: -.012em;
+  margin: 0 0 clamp(22px, 3.4vh, 34px);
+  max-width: 18ch;
+}
+.cat-band {
+  position: relative;
+  margin: 0;
+}
+/* full-bleed frame must clip: the corner-tick brackets sit at -1px
+   offsets, so on a viewport-wide band they escape by exactly 1px and
+   inflate scrollWidth (C2-A2, second half of the 1px overflow) —
+   the clipped 1px is already off-screen, so this is invisible */
+.cat-band .media-frame { overflow: hidden; }
+.cat-band .media-crop img {
+  aspect-ratio: 21 / 9;
+  min-height: 176px;
+  max-height: clamp(320px, 58vh, 560px);
+  object-position: center 40%;
+  /* full-bleed band: any scale (even 1.001) bleeds 1px past the
+     viewport — keep the base transform strictly none (C2-A2) */
+  transform: none;
+}
+/* night-launch source: keep the plume in the ultrawide crop */
+.cat-band .media-frame--low .media-crop img { object-position: center 74%; }
+.cat-band .band-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(4,7,15,.38) 0%,
+    rgba(4,7,15,.6) 55%,
+    rgba(4,7,15,.88) 100%);
+  pointer-events: none;
+}
+.cat-band figcaption {
+  position: absolute;
+  bottom: 16px;
+  left: max(var(--gutter), calc(50% - 720px + var(--gutter)));
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* ---------- 5. FILED ENTRY INDEX (numbered editorial rows) ---------- */
+.cat-section { padding-top: clamp(52px, 8vh, 88px); }
+.list-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: clamp(10px, 2vw, 18px);
+}
+.list-head .rule,
+.reserved-head .rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hair), transparent);
+  transform: translateY(-3px);
+}
+.entry-list { list-style: none; margin: 0; padding: 0; }
+.entry {
+  display: grid;
+  grid-template-areas: "idx main btn";
+  grid-template-columns: minmax(58px, 92px) minmax(0, 1fr) auto;
+  gap: clamp(20px, 3.5vw, 48px);
+  align-items: start;
+  padding: clamp(26px, 3.6vw, 42px) 0;
+}
+.entry + .entry { border-top: 1px solid var(--hair-soft); }
+.entry-index {
+  grid-area: idx;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .22em;
+  color: var(--ink-2);
+  padding-top: 11px;
+  transition: color var(--dur-1) var(--ease-out);
+}
+.entry-main { grid-area: main; }
+.entry-btn { grid-area: btn; margin-top: 4px; }
+.entry-title {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  line-height: 1.16;
+  margin: 0 0 10px;
+}
+.entry-title a { color: var(--ink-1); }
+.entry-desc { color: var(--ink-2); max-width: 62ch; margin: 0 0 20px; }
+.entry:hover .entry-title a,
+.entry-title a:hover { color: var(--brass); }
+.entry:focus-within .entry-title a { color: var(--brass); }
+.entry:hover .entry-index,
+.entry:focus-within .entry-index { color: var(--brass-dim); }
+
+/* ---------- 6. FORTHCOMING / RESERVED SLOTS ---------- */
+.reserved-section { padding-top: clamp(48px, 7vh, 80px); }
+.reserved-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+.reserved-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.reserved {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border: 1px dashed rgba(233,228,214,.24);
+  padding: 20px 22px 22px;
+  opacity: .5;
+  transition: opacity var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+}
+.reserved:hover,
+.reserved:focus-within {
+  opacity: .8;
+  border-color: rgba(233,228,214,.38);
+}
+.reserved-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.reserved-index {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+/* "Read Now" on reserved slots is presentation text, not navigation
+   (C2-B5): the fragments render it as a non-interactive <span> with
+   aria-disabled — dimmed, no pointer, not focusable. */
+.reserved-link {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.reserved-title {
+  font-size: 1.18rem;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink-3);
+}
+.reserved-desc {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+/* ---------- 7. EMPTY COLLECTION STATE (news) ---------- */
+.cat-empty {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 34px);
+  margin: 0 0 clamp(26px, 4vw, 40px);
+}
+.cat-empty .rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hair), transparent);
+}
+.cat-empty .label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- 8. RESPONSIVE ---------- */
+@media (max-width: 980px) {
+  .dossier,
+  .dossier:nth-of-type(even) {
+    grid-template-areas: "text" "media";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .dossier + .dossier {
+    margin-top: 44px;
+    padding-top: 44px;
+  }
+  .dossier-text > p { max-width: 58ch; }
+}
+@media (max-width: 760px) {
+  .entry,
+  .entry + .entry { border-top: none; }
+  .entry {
+    grid-template-areas: "idx" "main" "btn";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 24px 0;
+  }
+  .entry + .entry { border-top: 1px solid var(--hair-soft); }
+  .entry-index { padding-top: 0; }
+  .entry-btn { justify-self: start; margin-top: 8px; }
+  .cat-band .media-crop img { aspect-ratio: 16 / 9; min-height: 150px; }
+  .cat-band figcaption { bottom: 12px; }
+}
+@media (max-width: 640px) {
+  .reserved-grid { grid-template-columns: minmax(0, 1fr); }
+  .hub-hero { min-height: clamp(300px, 46vh, 420px); }
+  .dossier-index .meta { display: none; }
+}
+
+/* ---------- 9. MOTION SAFETY ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .media-crop img { transition: none; }
+  .reserved { transition: none; }
+}
+
+/* ============================================================
+   UPGRADE — collection quicknav + stronger hierarchy
+   (user feedback: categories must be unmistakably distinct)
+   ============================================================ */
+.hub-quicknav {
+  position: sticky;
+  top: 60px; /* engages once header is in scrolled (60px) state */
+  z-index: 90;
+  background: rgba(6,10,20,.86);
+  /* backdrop-filter dropped (C2-C12): under a .86-opaque bg the blur
+     was invisible — pure GPU cost on every scroll frame */
+  border-bottom: 1px solid var(--hair-soft);
+}
+.quicknav-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: stretch;
+  gap: clamp(6px, 1.6vw, 18px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.quicknav-inner::-webkit-scrollbar { display: none; }
+.hub-quicknav a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 15px 4px 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .3s var(--ease-out), border-color .3s var(--ease-out);
+}
+.hub-quicknav a .qn-idx {
+  font-size: 9px;
+  color: var(--ink-2);
+  letter-spacing: .12em;
+}
+.hub-quicknav a:hover { color: var(--ink-1); }
+.hub-quicknav a[aria-current="true"] {
+  color: var(--brass);
+  border-bottom-color: var(--brass);
+}
+.hub-quicknav a[aria-current="true"] .qn-idx { color: var(--brass-dim); }
+
+/* dossier sections get anchor breathing room + strong local identity.
+   154px (not 128): reveal translateY(26px) is included in the browser's
+   anchor target, so the extra 26px restores the designed gap (C2-C11) */
+.dossier { scroll-margin-top: 154px; }
+.dossier-title {
+  font-size: clamp(2.05rem, 3.6vw, 2.95rem) !important;
+  letter-spacing: -.014em;
+  margin-bottom: 18px !important;
+}
+.dossier-index .idx {
+  font-size: 15px !important;
+  color: var(--brass) !important;
+  font-weight: 500;
+}
+.dossier-text > p { color: var(--ink-2); }
+
+/* category pages: bigger H1 + unmistakable section divisions */
+.cat-title {
+  font-size: clamp(2.8rem, 6.2vw, 4.3rem) !important;
+  margin-bottom: clamp(26px, 4vh, 40px) !important;
+}
+.cat-head .eyebrow { color: var(--brass); }
+.entry { scroll-margin-top: 128px; }
+
+/* section heads (Filed Entries / Forthcoming) promoted to brass instrument headers */
+.list-head, .reserved-head {
+  margin-top: clamp(52px, 7.5vw, 92px) !important;
+  margin-bottom: clamp(14px, 2.4vw, 22px) !important;
+}
+.list-head .data-label, .reserved-head .data-label {
+  color: var(--brass) !important;
+  font-size: 12px !important;
+  letter-spacing: .3em !important;
+}
+.list-head .data-label::before, .reserved-head .data-label::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: var(--brass-dim);
+  vertical-align: 4px;
+  margin-right: 12px;
+}
+.list-head .rule, .reserved-head .rule { background: linear-gradient(90deg, rgba(227,169,79,.4), transparent) !important; }
+
+/* entry titles bigger + brighter */
+.entry-title, .entry h3 {
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+}
+@media (max-width: 980px) {
+  .hub-quicknav { top: 60px; }
+  .quicknav-inner { padding: 0 20px; }
+}

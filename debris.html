@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Debris Explorer — STARS</title>
+  <meta name="description" content="An interactive, scientifically-grounded visualization of the tracked orbital debris environment around Earth.">
+  <meta property="og:title" content="Orbital Debris Explorer — STARS">
+  <meta property="og:description" content="An interactive, scientifically-grounded visualization of the tracked orbital debris environment around Earth.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/debris-earth.webp">
+  <meta name="theme-color" content="#04070F">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,340;9..144,400;9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/debris.css">
+</head>
+<body class="debris-page" data-page="debris">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="STARS — home">
+        <img class="brand-emblem" src="images/logo-white.png" alt="" width="38" height="38">
+        <span class="brand-word">STARS</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul class="nav-list">
+        <li><a class="nav-link is-active" data-key="home" href="index.html"><span class="nav-idx">01</span>Home</a></li>
+        <li><a class="nav-link" data-key="about" href="aboutUs.html"><span class="nav-idx">02</span>About</a></li>
+        <li><a class="nav-link" data-key="resources" href="resources.html"><span class="nav-idx">03</span>Resources</a></li>
+        <li><a class="nav-link" data-key="articles" href="articles.html"><span class="nav-idx">04</span>Articles</a></li>
+        <li><a class="nav-link" data-key="events" href="events.html"><span class="nav-idx">05</span>Events</a></li>
+        <li><a class="nav-link" data-key="newsletter" href="newsletter.html"><span class="nav-idx">06</span>Newsletter</a></li>
+        </ul>
+        <span class="nav-indicator" aria-hidden="true"></span>
+      </nav>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu">
+      <a class="mm-link" href="index.html"><span class="mm-idx">01</span>Home</a>
+      <a class="mm-link" href="aboutUs.html"><span class="mm-idx">02</span>About</a>
+      <a class="mm-link" href="resources.html"><span class="mm-idx">03</span>Resources</a>
+      <a class="mm-link" href="articles.html"><span class="mm-idx">04</span>Articles</a>
+      <a class="mm-link" href="events.html"><span class="mm-idx">05</span>Events</a>
+      <a class="mm-link" href="newsletter.html"><span class="mm-idx">06</span>Newsletter</a>
+  </div>
+  <main id="main">
+<!-- ============================================================
+     ORBITAL DEBRIS EXPLORER — simulation stage
+     Engine: js/debris-sim.js  (API: window.DEBRIS_SIM — frozen)
+     Instrument UI layer (Agent E2): the dv-* hooks below carry
+     the mission-control panels; the wiring script at the end of
+     this fragment drives everything through the engine API.
+     ============================================================ -->
+<div class="debris-app">
+
+  <section class="debris-intro">
+    <div class="di-left">
+      <p class="eyebrow">Interactive Model</p>
+      <h1 class="di-title">Orbital Debris Explorer</h1>
+      <p class="di-line">A statistically representative model of the tracked objects orbiting Earth &mdash; drag to orbit, scroll to zoom, click to inspect.</p>
+    </div>
+    <div class="di-meta" aria-hidden="true">
+      <span>MODEL &mdash; STATISTICALLY REPRESENTATIVE</span>
+      <span>PROPAGATION &mdash; TWO-BODY KEPLERIAN</span>
+      <span>&mu; &mdash; 398,600.44 KM&sup3;/S&sup2;</span>
+    </div>
+  </section>
+
+  <section class="debris-stage" aria-label="Orbital debris simulation">
+    <canvas id="debris-canvas" tabindex="0"
+      aria-label="Interactive three-dimensional map of tracked objects in orbit around Earth. Drag or use arrow keys to rotate, scroll or plus and minus keys to zoom, click to inspect an object."></canvas>
+
+    <!-- loading veil (engine-driven) -->
+    <div class="dv-loading" id="dvLoading" hidden role="status" aria-live="polite">
+      <div class="dv-load-title">CALIBRATING EPHEMERIS</div>
+      <div class="dv-load-bar"><div class="dv-load-fill" id="dvLoadFill"></div></div>
+      <div class="dv-load-pct" id="dvLoadPct">0%</div>
+    </div>
+
+    <!-- WebGL failure panel (engine-driven) -->
+    <div class="dv-fallback" id="dvFallback" hidden>
+      <div class="dv-fallback-panel">
+        <div class="dv-fb-title">WEBGL UNAVAILABLE</div>
+        <p>The explorer requires hardware acceleration.</p>
+        <a class="dv-fb-link" href="./index.html">RETURN TO STARS</a>
+      </div>
+    </div>
+
+    <!-- ══ INSTRUMENT UI (Agent E2) ════════════════════════════ -->
+
+    <!-- top-left · mission status -->
+    <div class="dv-panel dv-status" id="dvStatus" aria-live="polite">
+      <div class="dv-status-title">ORBITAL DEBRIS EXPLORER</div>
+      <div class="dv-status-line">
+        <span class="dv-dot" aria-hidden="true"></span>
+        <span class="dv-status-text" id="dvStatusText">SIM T+ 00:00:00 &middot; WARP 60&times; &middot; 21,484 OBJ</span>
+      </div>
+      <div class="dv-status-chips">
+        <button type="button" class="dv-chip" id="dvChipLayers" aria-controls="dvLayers" aria-expanded="false">LAYERS</button>
+        <button type="button" class="dv-chip" id="dvChipData" aria-controls="dvTelemetry" aria-expanded="false">DATA</button>
+      </div>
+    </div>
+
+    <!-- left rail · population layers -->
+    <div class="dv-panel dv-layers" id="dvLayers" aria-label="Population layers">
+      <div class="dv-h">LAYERS</div>
+      <label class="dv-layer" data-layer="active">
+        <input type="checkbox" data-layer="active" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">ACTIVE SATELLITES</span>
+        <span class="dv-n" data-n="active">&mdash;</span>
+      </label>
+      <label class="dv-layer" data-layer="const">
+        <input type="checkbox" data-layer="const" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">CONSTELLATIONS</span>
+        <span class="dv-n" data-n="const">&mdash;</span>
+      </label>
+      <label class="dv-layer" data-layer="geo">
+        <input type="checkbox" data-layer="geo" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">GEO / MEO SHELLS</span>
+        <span class="dv-n" data-n="geo">&mdash;</span>
+      </label>
+      <label class="dv-layer" data-layer="debris">
+        <input type="checkbox" data-layer="debris" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">DEBRIS FRAGMENTS</span>
+        <span class="dv-n" data-n="debris">&mdash;</span>
+      </label>
+      <label class="dv-layer" data-layer="breakup">
+        <input type="checkbox" data-layer="breakup" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">BREAKUP EVENTS</span>
+        <span class="dv-n" data-n="breakup">&mdash;</span>
+      </label>
+      <label class="dv-layer" data-layer="rocket">
+        <input type="checkbox" data-layer="rocket" checked>
+        <span class="dv-sw" aria-hidden="true"></span>
+        <span class="dv-layer-name">ROCKET BODIES</span>
+        <span class="dv-n" data-n="rocket">&mdash;</span>
+      </label>
+      <div class="dv-layers-sep" role="presentation"></div>
+      <label class="dv-layer" data-layer="orbits">
+        <input type="checkbox" data-layer="orbits" checked>
+        <span class="dv-sw dv-sw--ring" aria-hidden="true"></span>
+        <span class="dv-layer-name">FEATURED ORBITS</span>
+        <span class="dv-n" data-n="orbits">08</span>
+      </label>
+      <label class="dv-layer" data-layer="labels">
+        <input type="checkbox" data-layer="labels" checked>
+        <span class="dv-sw dv-sw--ring" aria-hidden="true"></span>
+        <span class="dv-layer-name">LABELS</span>
+        <span class="dv-n" data-n="labels">08</span>
+      </label>
+      <label class="dv-layer" data-layer="grid">
+        <input type="checkbox" data-layer="grid">
+        <span class="dv-sw dv-sw--hair" aria-hidden="true"></span>
+        <span class="dv-layer-name">GEO REFERENCE GRID</span>
+        <span class="dv-n" data-n="grid"></span>
+      </label>
+    </div>
+
+    <!-- bottom center · clock + time warp -->
+    <div class="dv-bar" id="dvTimebar" role="group" aria-label="Simulation clock and time warp">
+      <button type="button" class="dv-btn dv-play" id="dvPlay" aria-pressed="false">PAUSE</button>
+      <div class="dv-warps" role="group" aria-label="Time warp factor">
+        <button type="button" class="dv-btn dv-warp" data-warp="1">1&times;</button>
+        <button type="button" class="dv-btn dv-warp" data-warp="60">60&times;</button>
+        <button type="button" class="dv-btn dv-warp" data-warp="600">600&times;</button>
+        <button type="button" class="dv-btn dv-warp" data-warp="3600">3600&times;</button>
+      </div>
+    </div>
+
+    <!-- bottom full-width · altitude scrub -->
+    <div class="dv-altitude" id="dvAltitude" role="group" aria-label="Altitude filter">
+      <div class="dv-alt-head">
+        <span class="dv-alt-label">ALTITUDE FILTER</span>
+        <span class="dv-alt-read">
+          <span class="dv-alt-regime" id="dvAltRegime">FULL CATALOG</span>
+          <span class="dv-alt-sep" aria-hidden="true">&middot;</span>
+          <span class="dv-alt-km" id="dvAltKm">40,000 KM</span>
+        </span>
+      </div>
+      <input type="range" id="dvAlt" min="0" max="1000" step="1" value="1000"
+        aria-label="Altitude filter, logarithmic scale, 300 to 40,000 kilometres">
+      <div class="dv-alt-scale" aria-hidden="true">
+        <span style="left:0">300</span>
+        <span style="left:24.6%">1,000</span>
+        <span style="left:38.8%">2,000</span>
+        <span style="left:71.7%">10,000</span>
+        <span class="dv-alt-geo" style="left:97.7%">GEO 35,786</span>
+        <span style="left:100%">40,000 KM</span>
+      </div>
+    </div>
+
+    <!-- right rail · telemetry -->
+    <div class="dv-panel dv-telemetry" id="dvTelemetry" aria-label="Population telemetry">
+      <div class="dv-h">POPULATION &mdash; ESTIMATED</div>
+      <div class="dv-pop">
+        <div class="dv-pop-row"><span>TRACKED LARGE OBJECTS</span><strong>43,000+</strong></div>
+        <div class="dv-pop-row"><span>DEBRIS &gt; 1 CM</span><strong>1.22 MILLION</strong></div>
+        <div class="dv-pop-row"><span>MICROSCOPIC PARTICLES</span><strong>130 MILLION</strong></div>
+      </div>
+      <div class="dv-src">FIGURES &mdash; ESA, AS CITED IN STARS ARTICLES</div>
+      <div class="dv-h dv-h--events">FRAGMENTATION EVENTS</div>
+      <div class="dv-events" id="dvEvents"></div>
+      <div class="dv-ev-detail" id="dvEvDetail" role="status">
+        <span class="dv-ev-info" id="dvEvInfo">SELECT AN EVENT TO INSPECT ITS CLOUD</span>
+        <span class="dv-ev-count" id="dvEvCount" hidden><b id="dvEvN">0</b> OBJECTS MODELED</span>
+      </div>
+    </div>
+
+    <!-- bottom-right · live hover readout -->
+    <div class="dv-readout" id="dvHover" hidden>
+      <i class="dv-hov-dot" id="dvHoverDot" aria-hidden="true"></i>
+      <b class="dv-hov-id" id="dvHoverId"></b>
+      <span class="dv-hov-meta" id="dvHoverMeta"></span>
+    </div>
+
+    <!-- top-center · selected-object card -->
+    <div class="dv-card" id="dvCard" hidden>
+      <button type="button" class="dv-card-x" id="dvCardX" aria-label="Deselect object">&times;</button>
+      <div class="dv-card-name" id="dvCardName">&mdash;</div>
+      <div class="dv-card-regime" id="dvCardRegime">&mdash;</div>
+      <div class="dv-card-grid">
+        <div class="dv-cg"><span>ALT</span><strong id="dvCgAlt">&mdash;</strong></div>
+        <div class="dv-cg"><span>INCL</span><strong id="dvCgIncl">&mdash;</strong></div>
+        <div class="dv-cg"><span>PERIOD</span><strong id="dvCgPer">&mdash;</strong></div>
+        <div class="dv-cg"><span>ECC</span><strong id="dvCgEcc">&mdash;</strong></div>
+        <div class="dv-cg"><span>VEL</span><strong id="dvCgVel">&mdash;</strong></div>
+      </div>
+    </div>
+
+    <!-- featured-object HTML labels + selection reticle (driven per-frame) -->
+    <div class="dv-labels" id="dvLabels" aria-hidden="true"></div>
+    <div class="dv-reticle" id="dvReticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+    <!-- methodology -->
+    <div class="dv-help" id="dvHelp">DRAG &mdash; ORBIT &middot; SCROLL &mdash; ZOOM &middot; CLICK &mdash; SELECT</div>
+    <button type="button" class="dv-method-btn" id="dvMethodBtn" aria-haspopup="dialog" aria-controls="dvModal" aria-expanded="false" aria-label="Methodology and data notes">?</button>
+    <div class="dv-modal" id="dvModal" hidden>
+      <div class="dv-modal-panel" role="dialog" aria-modal="true" aria-labelledby="dvModalTitle">
+        <div class="dv-modal-title" id="dvModalTitle">METHODOLOGY &mdash; DATA &amp; MODEL NOTES</div>
+        <p class="dv-modal-text">This visualization renders a statistically representative catalog of ~21,000 tracked objects. Orbital shells, inclinations, and fragmentation clouds mirror published ESA and NASA orbital-debris population data; individual fragment positions are statistically generated. Keplerian two-body propagation is used throughout. Figures as cited in STARS articles.</p>
+        <button type="button" class="dv-modal-close" id="dvModalClose">CLOSE</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   ORBITAL DEBRIS EXPLORER — instrument UI controller (Agent E2)
+   Drives the frozen engine via window.DEBRIS_SIM; degrades
+   silently if the engine is missing or WebGL failed.
+   ============================================================ */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+
+  function init() {
+    var S = window.DEBRIS_SIM;
+    if (!S || typeof S.getOverlayState !== "function") return;
+
+    var stats = null;
+    try { stats = S.getCatalogStats(); } catch (e0) { stats = null; }
+
+    /* class colors (hover dot) */
+    var clsColor = {};
+    if (stats && stats.classes) {
+      for (var ci = 0; ci < stats.classes.length; ci++) {
+        clsColor[stats.classes[ci].key] = stats.classes[ci].color;
+      }
+    }
+
+    /* ── layer rail ─────────────────────────────────────────── */
+    var inputs = document.querySelectorAll("#dvLayers input[data-layer]");
+    for (var i = 0; i < inputs.length; i++) {
+      (function (inp) {
+        var key = inp.getAttribute("data-layer");
+        try { inp.checked = !!S.getClassVisibility(key); } catch (e1) {}
+        inp.addEventListener("change", function () {
+          try { S.classVisibility(key, inp.checked); } catch (e2) {}
+        });
+      })(inputs[i]);
+    }
+    if (stats && stats.classes) {
+      for (var cj = 0; cj < stats.classes.length; cj++) {
+        var c = stats.classes[cj];
+        var nEl = document.querySelector('#dvLayers .dv-n[data-n="' + c.key + '"]');
+        if (nEl) nEl.textContent = fmt(c.count);
+      }
+    }
+    var featN = stats && stats.featured ? stats.featured.length : 8;
+    var orbitN = document.querySelector('#dvLayers .dv-n[data-n="orbits"]');
+    var labelN = document.querySelector('#dvLayers .dv-n[data-n="labels"]');
+    var pad2 = (featN < 10 ? "0" : "") + featN;
+    if (orbitN) orbitN.textContent = pad2;
+    if (labelN) labelN.textContent = pad2;
+
+    /* ── time warp ──────────────────────────────────────────── */
+    var warpBtns = document.querySelectorAll("#dvTimebar .dv-warp");
+    function syncWarp(w) {
+      for (var i = 0; i < warpBtns.length; i++) {
+        warpBtns[i].classList.toggle("is-on", Number(warpBtns[i].getAttribute("data-warp")) === w);
+      }
+    }
+    var uiWarp = -1;
+    for (var wi = 0; wi < warpBtns.length; wi++) {
+      (function (b) {
+        b.addEventListener("click", function () {
+          var w = S.setTimeWarp(Number(b.getAttribute("data-warp")));
+          if (isFinite(w) && w > 0) { uiWarp = w; syncWarp(w); }
+        });
+      })(warpBtns[wi]);
+    }
+
+    /* ── pause / resume ─────────────────────────────────────── */
+    var playBtn = $("dvPlay"), uiPaused = null;
+    function syncPaused(p) {
+      if (!playBtn) return;
+      playBtn.setAttribute("aria-pressed", String(p));
+      playBtn.textContent = p ? "RESUME" : "PAUSE";
+      playBtn.classList.toggle("is-hold", !!p);
+    }
+    if (playBtn) {
+      playBtn.addEventListener("click", function () {
+        try { S.pause(!S.isPaused()); } catch (e3) {}
+      });
+    }
+
+    /* ── altitude scrub (log scale 300 – 40,000 km) ─────────── */
+    var alt = $("dvAlt"), altKmEl = $("dvAltKm"), altRegEl = $("dvAltRegime");
+    var LMIN = Math.log(300), LMAX = Math.log(40000);
+    function tToKm(t) { return 300 * Math.exp((t / 1000) * (LMAX - LMIN)); }
+    function regimeOf(km) {
+      if (km >= 40000) return "FULL CATALOG";
+      if (km < 2000) return "LEO \u2014 LOW EARTH ORBIT";
+      if (km < 35486) return "MEO \u2014 MEDIUM EARTH ORBIT";
+      if (km <= 36086) return "GEO \u2014 GEOSTATIONARY BELT";
+      return "HEO \u2014 HIGH EARTH ORBIT";
+    }
+    function altApply() {
+      if (!alt) return;
+      var km = Math.round(tToKm(Number(alt.value)));
+      try { S.setAltitudeFilter(km); } catch (e4) {}
+      var reg = regimeOf(km);
+      if (altKmEl) altKmEl.textContent = fmt(km) + " KM";
+      if (altRegEl) altRegEl.textContent = reg;
+      try {
+        alt.setAttribute("aria-valuetext", fmt(km) + " kilometres, " + reg);
+      } catch (e5) {}
+    }
+    if (alt) {
+      alt.addEventListener("input", altApply);
+      altApply();
+    }
+
+    /* ── fragmentation events ───────────────────────────────── */
+    var evWrap = $("dvEvents"), evInfo = $("dvEvInfo"), evCount = $("dvEvCount"), evN = $("dvEvN");
+    var evRows = [], evCountRaf = 0;
+    function showEventDetail(rec) {
+      if (evInfo) evInfo.textContent = rec.info || "";
+      if (!evCount || !evN) return;
+      if (evCountRaf) { cancelAnimationFrame(evCountRaf); evCountRaf = 0; }
+      var target = (rec.count && rec.count > 1) ? rec.count : 0;
+      if (!target) { evCount.hidden = true; evN.textContent = "0"; return; }
+      evCount.hidden = false;
+      var t0 = performance.now(), dur = 700;
+      var step = function (now) {
+        var p = Math.min(1, (now - t0) / dur);
+        var e = 1 - Math.pow(1 - p, 3);
+        evN.textContent = fmt(Math.max(1, Math.round(target * e)));
+        if (p < 1) evCountRaf = requestAnimationFrame(step);
+        else evCountRaf = 0;
+      };
+      evCountRaf = requestAnimationFrame(step);
+    }
+    if (evWrap && stats && stats.events && stats.events.length) {
+      var evs = stats.events.slice().sort(function (a, b) { return a.year - b.year; });
+      for (var ei = 0; ei < evs.length; ei++) {
+        (function (ev) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "dv-event";
+          b.setAttribute("data-ev", ev.id);
+          var yr = document.createElement("span");
+          yr.className = "dv-ev-year";
+          yr.textContent = ev.year;
+          var nm = document.createElement("span");
+          nm.className = "dv-ev-name";
+          nm.textContent = ev.label;
+          b.appendChild(yr);
+          b.appendChild(nm);
+          b.addEventListener("click", function () {
+            var rec = null;
+            try { rec = S.focusEvent(ev.id); } catch (e6) {}
+            for (var k = 0; k < evRows.length; k++) {
+              evRows[k].classList.toggle("is-active", evRows[k] === b);
+            }
+            if (rec) showEventDetail(rec);
+          });
+          evWrap.appendChild(b);
+          evRows.push(b);
+        })(evs[ei]);
+      }
+    }
+
+    /* ── hover readout ──────────────────────────────────────── */
+    var hoverEl = $("dvHover"), hoverDot = $("dvHoverDot"),
+        hoverId = $("dvHoverId"), hoverMeta = $("dvHoverMeta");
+    try {
+      S.onHover(function (h) {
+        if (!hoverEl) return;
+        if (!h) { hoverEl.hidden = true; return; }
+        if (hoverDot) hoverDot.style.background = clsColor[h.cls] || "";
+        if (hoverId) hoverId.textContent = h.id;
+        if (hoverMeta) {
+          hoverMeta.textContent = " \u00b7 ALT " + Math.round(h.altKm) + " KM \u00b7 INCL " +
+            Number(h.inclDeg).toFixed(1) + "\u00b0" + (h.featured ? " \u00b7 FEATURED" : "");
+        }
+        hoverEl.hidden = false;
+      });
+    } catch (e7) {}
+
+    /* ── selection card ─────────────────────────────────────── */
+    var card = $("dvCard"), cardName = $("dvCardName"), cardRegime = $("dvCardRegime"),
+        cgAlt = $("dvCgAlt"), cgIncl = $("dvCgIncl"), cgPer = $("dvCgPer"),
+        cgEcc = $("dvCgEcc"), cgVel = $("dvCgVel");
+    function fmtPeriod(min) {
+      if (min < 120) return min.toFixed(1) + " MIN";
+      return (min / 60).toFixed(2) + " HRS";
+    }
+    try {
+      S.onSelect(function (p) {
+        if (!card) return;
+        if (!p) { card.hidden = true; return; }
+        if (cardName) cardName.textContent = p.name;
+        if (cardRegime) cardRegime.textContent = p.regime;
+        if (cgAlt) cgAlt.textContent = fmt(p.altKm) + " KM";
+        if (cgIncl) cgIncl.textContent = Number(p.inclDeg).toFixed(1) + "\u00b0";
+        if (cgPer) cgPer.textContent = fmtPeriod(Number(p.periodMin));
+        if (cgEcc) cgEcc.textContent = Number(p.ecc).toFixed(4);
+        if (cgVel) cgVel.textContent = Number(p.velKms).toFixed(2) + " KM/S";
+        card.hidden = false;
+      });
+    } catch (e8) {}
+    var cardX = $("dvCardX");
+    if (cardX) {
+      cardX.addEventListener("click", function () {
+        try { S.deselect(); } catch (e9) {}
+      });
+    }
+
+    /* ── featured labels + selection reticle ────────────────── */
+    var labelsWrap = $("dvLabels"), reticle = $("dvReticle");
+    var labelEls = [];
+    if (labelsWrap && stats && stats.featured) {
+      for (var li = 0; li < stats.featured.length; li++) {
+        var el = document.createElement("span");
+        el.className = "dv-satlabel";
+        el.textContent = stats.featured[li].name;
+        labelsWrap.appendChild(el);
+        labelEls.push(el);
+      }
+    }
+
+    /* ── methodology modal ──────────────────────────────────── */
+    var modal = $("dvModal"), modalBtn = $("dvMethodBtn"), modalClose = $("dvModalClose");
+    function openModal() {
+      if (!modal) return;
+      modal.hidden = false;
+      if (modalBtn) modalBtn.setAttribute("aria-expanded", "true");
+      if (modalClose) modalClose.focus();
+    }
+    function closeModal() {
+      if (!modal) return;
+      modal.hidden = true;
+      if (modalBtn) {
+        modalBtn.setAttribute("aria-expanded", "false");
+        modalBtn.focus();
+      }
+    }
+    if (modalBtn) {
+      modalBtn.addEventListener("click", function () {
+        if (modal && modal.hidden) openModal();
+        else closeModal();
+      });
+    }
+    if (modalClose) modalClose.addEventListener("click", closeModal);
+    if (modal) {
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+      });
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (modal && !modal.hidden) { closeModal(); return; }
+      try { if (S.getSelected && S.getSelected()) S.deselect(); } catch (e10) {}
+    });
+
+    /* ── compact-panel toggles (narrow viewports) ───────────── */
+    var chipLayers = $("dvChipLayers"), chipData = $("dvChipData");
+    var layersPanel = $("dvLayers"), telemPanel = $("dvTelemetry");
+    function togglePanel(chip, panel, otherChip, otherPanel) {
+      if (!chip || !panel) return;
+      var open = !panel.classList.contains("open");
+      if (open && otherPanel) otherPanel.classList.remove("open");
+      if (open && otherChip) otherChip.setAttribute("aria-expanded", "false");
+      panel.classList.toggle("open", open);
+      chip.setAttribute("aria-expanded", String(open));
+    }
+    if (chipLayers) {
+      chipLayers.addEventListener("click", function () {
+        togglePanel(chipLayers, layersPanel, chipData, telemPanel);
+      });
+    }
+    if (chipData) {
+      chipData.addEventListener("click", function () {
+        togglePanel(chipData, telemPanel, chipLayers, layersPanel);
+      });
+    }
+
+    /* ── per-frame overlay loop ─────────────────────────────── */
+    var statusText = $("dvStatusText");
+    var lastStatus = "", lastStatusT = 0, lastCardT = 0;
+
+    function loop() {
+      requestAnimationFrame(loop);
+      var ov;
+      try { ov = S.getOverlayState(); } catch (e11) { return; }
+      if (!ov || !ov.ready) return;
+
+      if (ov.paused !== uiPaused) { uiPaused = ov.paused; syncPaused(ov.paused); }
+      if (ov.warp !== uiWarp) { uiWarp = ov.warp; syncWarp(ov.warp); }
+
+      var now = performance.now();
+      var st = "SIM " + ov.simTimeLabel + " \u00b7 " +
+        (ov.paused ? "HOLD" : "WARP " + ov.warp + "\u00d7") + " \u00b7 " + fmt(ov.total) + " OBJ";
+      if (st !== lastStatus && statusText && now - lastStatusT > 500) {
+        statusText.textContent = st;
+        lastStatus = st;
+        lastStatusT = now;
+      }
+
+      var labelsOn = true;
+      try { labelsOn = S.getClassVisibility("labels"); } catch (e12) {}
+
+      if (ov.featured) {
+        for (var fi = 0; fi < ov.featured.length && fi < labelEls.length; fi++) {
+          var f = ov.featured[fi], el = labelEls[fi];
+          var sel = ov.selected && ov.selected.id === f.id;
+          if (f.visible && labelsOn && !sel) {
+            el.style.transform = "translate(" + f.x + "px," + (f.y - 16) + "px) translate(-50%, -100%)";
+            el.style.visibility = "visible";
+          } else {
+            el.style.visibility = "hidden";
+          }
+        }
+      }
+
+      if (reticle) {
+        if (ov.selected && ov.selected.screen && ov.selected.screen.visible) {
+          reticle.style.transform = "translate(" + (ov.selected.screen.x - 17) + "px," +
+            (ov.selected.screen.y - 17) + "px)";
+          reticle.style.visibility = "visible";
+        } else {
+          reticle.style.visibility = "hidden";
+        }
+      }
+
+      if (ov.selected && card && !card.hidden && now - lastCardT > 120) {
+        lastCardT = now;
+        if (cgAlt) cgAlt.textContent = fmt(ov.selected.altKm) + " KM";
+        if (cgVel) cgVel.textContent = Number(ov.selected.velKms).toFixed(2) + " KM/S";
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-emblem" src="images/logo-brass.png" alt="STARS logo" width="84" height="85">
+        <div>
+          <div class="footer-word">STARS</div>
+          <div class="footer-tag">Space Trash Awareness and Removal Solutions</div>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="aboutUs.html">About Us</a>
+        <a href="mailto:starsspacetrash.aiaa@gmail.com">Contact</a>
+        <a href="newsletter.html">Newsletter</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="js/main.js" defer></script>
+  <script src="js/starfield.js" defer></script>
+  <script src="js/vendor/three.min.js" defer></script>
+  <script src="js/debris-sim.js" defer></script>
+</body>
+</html>
