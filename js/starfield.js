@@ -98,10 +98,10 @@
       c.beginPath(); c.arc(0, 0, Math.max(rx, ry), 0, Math.PI * 2); c.fill();
       c.restore();
     }
-    blob(W * 0.78, H * 0.22, W * 0.34, W * 0.2, "22,36,64", 0.16);
-    blob(W * 0.16, H * 0.78, W * 0.38, W * 0.22, "18,30,54", 0.14);
-    blob(W * 0.52, H * 0.5, W * 0.5, W * 0.3, "14,22,40", 0.10);
-    blob(W * 0.88, H * 0.86, W * 0.24, W * 0.16, "48,36,24", 0.07);
+    blob(W * 0.78, H * 0.22, W * 0.34, W * 0.2, "30,48,92", 0.16);
+    blob(W * 0.16, H * 0.78, W * 0.38, W * 0.22, "24,40,76", 0.14);
+    blob(W * 0.52, H * 0.5, W * 0.5, W * 0.3, "18,28,54", 0.10);
+    blob(W * 0.88, H * 0.86, W * 0.24, W * 0.16, "60,44,28", 0.07);
     /* milky-way elongated haze along the band */
     var steps = 7;
     for (var i = 0; i < steps; i++) {
@@ -155,7 +155,8 @@
     var t = now / 1000;
 
     ctx.clearRect(0, 0, W, H);
-    if (nebula) ctx.drawImage(nebula, 0, 0, W, H);
+    // a zero-size window (hidden tab/iframe) leaves a 0x0 haze canvas, which drawImage rejects
+    if (nebula && nebula.width && nebula.height) ctx.drawImage(nebula, 0, 0, W, H);
 
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];

@@ -156,7 +156,9 @@
     var DPR = MAX_PR;
 
     /* ───────── 3 · SUN + FILL ───────── */
-    var sunDir = new THREE.Vector3(1, 0.18, 0.42).normalize();
+    // ~27° off the default camera bearing: the opening view is mostly daylit,
+    // with the terminator and city lights visible along the eastern limb
+    var sunDir = new THREE.Vector3(0.95, 0.25, -0.2).normalize();
     var sunLight = new THREE.DirectionalLight(0xfff2e0, 2.2);   // warm key
     sunLight.position.copy(sunDir).multiplyScalar(1e5);
     scene.add(sunLight);
@@ -231,24 +233,31 @@
         /* day side: gentle contrast + saturation; oceans deepened toward
            abyssal blue so ocean/land read as different materials */
         "  vec3 dayCol = texture2D(dayMap, vUv).rgb;",
-        "  dayCol = clamp((dayCol - 0.5) * 1.14 + 0.5, 0.0, 1.0);",
+        /* saturation only: a contrast pivot at 0.5 in linear space pushed the
+           (linear ~0.03) oceans below zero and rendered them black */
         "  float dlum = dot(dayCol, vec3(0.299, 0.587, 0.114));",
-        "  dayCol = clamp(mix(vec3(dlum), dayCol, 1.18), 0.0, 1.0);",
-        "  dayCol *= mix(vec3(1.0), vec3(0.55, 0.78, 1.12), waterM * 0.55);",
+        "  dayCol = clamp(mix(vec3(dlum), dayCol, 1.15), 0.0, 1.0);",
+        /* the water mask also marks rivers/lakes; only deepen where the day
+           texture itself reads as open ocean (blue-dominant), so inland
+           waterways don't smear blue across the continents */
+        "  float ocean = waterM * smoothstep(0.02, 0.10, dayCol.b - dayCol.r);",
+        "  dayCol *= mix(vec3(1.0), vec3(0.55, 0.78, 1.12), ocean * 0.55);",
         "  vec3 day = dayCol * (0.05 + 1.6 * diff);",
         /* warm city lights on the night side — luminance gate keeps the
            night ocean truly dark and makes light cores crisper */
+        /* the night texture is a full dark-Earth render (bluish land + ice),
+           not a lights-only mask: isolate city lights by their warmth
+           (red over blue) and keep the rest as a faint, cool landmass */
         "  vec3 nightCol = texture2D(nightMap, vUv).rgb;",
-        "  float nl = dot(nightCol, vec3(0.299, 0.587, 0.114));",
-        "  float nightGate = smoothstep(0.045, 0.30, nl);",
-        "  vec3 night = nightCol * vec3(1.0, 0.82, 0.55) * (0.55 + 2.6 * nightGate);",
+        "  float warm = smoothstep(0.02, 0.16, nightCol.r - nightCol.b);",
+        "  vec3 night = vec3(1.0, 0.78, 0.45) * warm * 1.5 + nightCol * 0.35;",
         /* ocean specular glint */
         "  vec3 R = reflect(-sunDir, N);",
-        "  float spec = pow(clamp(dot(R, V), 0.0, 1.0), 60.0) * waterM * dayMix * 0.75;",
+        "  float spec = pow(clamp(dot(R, V), 0.0, 1.0), 60.0) * ocean * dayMix * 0.75;",
         "  vec3 col = mix(night, day, dayMix) + vec3(1.0, 0.93, 0.80) * spec;",
         /* subtle warm twilight band hugging the terminator */
-        "  float tw = smoothstep(0.22, 0.02, abs(ndl0));",
-        "  col += vec3(0.42, 0.16, 0.05) * tw * 0.22;",
+        "  float tw = smoothstep(0.10, 0.0, abs(ndl0));",
+        "  col += vec3(0.42, 0.16, 0.05) * tw * 0.05;",
         /* thin rayleigh limb on the lit side */
         "  float fres = pow(1.0 - clamp(dot(N0, V), 0.0, 1.0), 3.2);",
         "  col += vec3(0.13, 0.26, 0.44) * fres * (0.20 + 0.80 * dayMix) * 0.45;",

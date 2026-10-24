@@ -37,6 +37,34 @@
     if (current) { move(current); window.addEventListener("resize", function () { move(current); }); }
   }
 
+  /* ---------- "Learn" dropdown (click/tap + keyboard; hover handled in CSS) ---------- */
+  var drops = document.querySelectorAll(".nav-item--drop");
+  function closeDrops(except) {
+    drops.forEach(function (d) {
+      if (d === except) return;
+      d.classList.remove("open");
+      var b = d.querySelector("button");
+      if (b) b.setAttribute("aria-expanded", "false");
+    });
+  }
+  drops.forEach(function (d) {
+    var btn = d.querySelector("button");
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !d.classList.contains("open");
+      closeDrops(d);
+      d.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest || !e.target.closest(".nav-item--drop")) closeDrops();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeDrops();
+  });
+
   /* ---------- mobile menu ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var menu = document.querySelector(".mobile-menu");

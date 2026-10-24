@@ -45,7 +45,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(4,7,15,.30) 0%, rgba(4,7,15,.46) 55%, rgba(4,7,15,.82) 100%);
+  background: linear-gradient(180deg, rgba(8,14,36,.30) 0%, rgba(8,14,36,.46) 55%, rgba(8,14,36,.82) 100%);
 }
 .about-page .about-band-caption {
   position: absolute;
@@ -56,7 +56,7 @@
   display: inline-block;
   color: var(--ink-2);
   padding-top: 9px;
-  border-top: 1px solid rgba(233,228,214,.30);
+  border-top: 1px solid rgba(190,206,255,.30);
 }
 
 /* mission pullquote — even last line (Critique C10) */
@@ -111,8 +111,8 @@
 }
 .resources-page .ref-group-index {
   font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: .14em;
+  font-size: 12.5px;
+  letter-spacing: 0.059em;
   color: var(--brass);
 }
 .resources-page .ref-group-title {
@@ -134,7 +134,7 @@
   grid-template-areas: "idx main";
   column-gap: clamp(18px, 3.4vw, 48px);
   padding: clamp(28px, 3.6vw, 42px) 4px clamp(26px, 3.2vw, 38px) clamp(16px, 2.4vw, 26px);
-  border-bottom: 1px solid rgba(233,228,214,.18);
+  border-bottom: 1px solid rgba(190,206,255,.18);
 }
 /* left hairline grows in brass on hover / focus */
 .resources-page .ref-row::before {
@@ -155,8 +155,8 @@
 .resources-page .ref-index {
   grid-area: idx;
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .16em;
+  font-size: 12.5px;
+  letter-spacing: 0.067em;
   color: var(--brass);
   opacity: .78;
   padding-top: .5em;
@@ -181,8 +181,8 @@
   gap: 10px;
   max-width: 100%;
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: .18em;
+  font-size: 12.5px;
+  letter-spacing: 0.076em;
   text-transform: uppercase;
   line-height: 1.75;
   color: var(--cyan);
@@ -217,7 +217,7 @@
   .resources-page .ref-group-head { gap: 12px; }
 }
 @media (max-width: 560px) {
-  .resources-page .ref-cta { font-size: 10.5px; letter-spacing: .14em; }
+  .resources-page .ref-cta { font-size: 12.5px; letter-spacing: 0.059em; }
   .resources-page .ref-desc { font-size: 15.5px; }
 }
 
@@ -290,7 +290,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(4,7,15,.10) 0%, rgba(4,7,15,.82) 100%);
+  background: linear-gradient(180deg, rgba(8,14,36,.10) 0%, rgba(8,14,36,.82) 100%);
 }
 
 /* empty-state composition on a solid readable ground, below the band */
@@ -306,7 +306,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: rgba(6,10,20,.82);
+  background: rgba(10,18,44,.82);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border: 1px solid var(--hair);
@@ -314,7 +314,7 @@
 }
 .events-page .events-status {
   color: var(--ink-2);
-  letter-spacing: .34em;
+  letter-spacing: 0.143em;
 }
 .events-page .events-rule {
   width: 40px;
@@ -326,8 +326,8 @@
   margin: 0;
   max-width: 26ch;
   font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 380;
+  font-style: normal;
+  font-weight: 600;
   font-size: clamp(1.25rem, 2.4vw, 1.5rem);
   line-height: 1.55;
   color: var(--ink-1);
@@ -340,7 +340,7 @@
 
 @media (max-width: 560px) {
   .events-page .events-panel { padding: 52px 30px; }
-  .events-page .events-status { letter-spacing: .26em; }
+  .events-page .events-status { letter-spacing: 0.109em; }
 }
 
 /* ============================================================
@@ -383,7 +383,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(4,7,15,.10) 0%, rgba(4,7,15,.82) 100%);
+  background: linear-gradient(180deg, rgba(8,14,36,.10) 0%, rgba(8,14,36,.82) 100%);
 }
 .newsletter-page .nl-band-caption {
   position: absolute;
@@ -394,7 +394,7 @@
   display: inline-block;
   color: var(--ink-2);
   padding-top: 9px;
-  border-top: 1px solid rgba(233,228,214,.30);
+  border-top: 1px solid rgba(190,206,255,.30);
 }
 
 /* signup stage — hugs content: no 100vh stretch, intentional CTA → readout
@@ -405,8 +405,8 @@
   place-items: center;
   padding: clamp(80px, 12vh, 128px) var(--gutter) clamp(104px, 15vh, 150px);
   background-image:
-    linear-gradient(rgba(4,7,15,.82), rgba(4,7,15,.82)),
-    url("images/earth-night.webp");
+    linear-gradient(rgba(8,14,36,.82), rgba(8,14,36,.82)),
+    url("../images/earth-night.webp");
   background-size: cover;
   background-position: center 62%;
   background-repeat: no-repeat;
@@ -429,14 +429,14 @@
 .newsletter-page .nl-lead {
   margin: 0 0 20px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .26em;
+  font-size: 12.5px;
+  letter-spacing: 0.109em;
   text-transform: uppercase;
   color: var(--ink-2);
 }
 .newsletter-page .nl-btn {
   font-size: 13px;
-  letter-spacing: .24em;
+  letter-spacing: 0.101em;
   padding: 18px 34px;
 }
 
@@ -445,8 +445,8 @@
   position: absolute;
   bottom: clamp(22px, 4.5vh, 44px);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .22em;
+  font-size: 12.5px;
+  letter-spacing: 0.092em;
   text-transform: uppercase;
   color: var(--ink-2);
   opacity: .9;
@@ -469,9 +469,91 @@
     background-attachment: scroll;
     background-position: center 38%;
   }
-  .newsletter-page .nl-readout { font-size: 9px; letter-spacing: .16em; }
+  .newsletter-page .nl-readout { font-size: 12.5px; letter-spacing: 0.067em; }
   .newsletter-page .nl-readout::before { width: 20px; margin-bottom: 7px; }
 }
 @media (max-width: 560px) {
   .newsletter-page .nl-band-caption { left: 18px; }
 }
+
+/* ============================================================
+   REFRESH — contained imagery, card surfaces, clearer type
+   ============================================================ */
+/* image bands sit inside the content width with rounded corners */
+.about-page .about-band,
+.newsletter-page .nl-band {
+  max-width: var(--maxw);
+  margin-left: auto; margin-right: auto;
+  padding: 0 var(--gutter);
+}
+.events-page .events-stage { margin: clamp(26px, 4vw, 44px) 0 0; width: auto; }
+.about-page .about-band-media,
+.events-page .events-media,
+.newsletter-page .nl-band-media { border-radius: var(--radius); }
+.about-page .about-band-img,
+.events-page .events-img,
+.newsletter-page .nl-band-img { aspect-ratio: 16 / 7; min-height: 220px; max-height: 460px; }
+.about-page .about-band-caption,
+.newsletter-page .nl-band-caption { left: calc(var(--gutter) + 22px); }
+.about-page .about-band-caption .data-label,
+.newsletter-page .nl-band-caption .data-label { border-top: 0; padding-top: 0; color: var(--ink-2); }
+.about-page .about-band-scrim,
+.events-page .events-scrim,
+.newsletter-page .nl-band-scrim { background: linear-gradient(180deg, rgba(8,14,36,0) 45%, rgba(8,14,36,.75) 100%); }
+
+/* page titles */
+.about-page .article-title, .resources-page .ref-title, .events-page .events-title, .newsletter-page .nl-title {
+  font-weight: 600; letter-spacing: -.03em;
+}
+.about-page .about-meta { text-transform: none; }
+.about-page .about-body { max-width: 68ch; }
+
+/* resources: each source is a card */
+.resources-page .ref-intro { border-top: 0; padding-top: 0; font-size: 18px; }
+.resources-page .ref-group-index { font-family: var(--font-display); font-weight: 600; font-size: 15px; }
+.resources-page .ref-group-title { font-weight: 600; }
+.resources-page .ref-group { display: grid; gap: 12px; }
+.resources-page .ref-group-head { margin-bottom: 6px; }
+.resources-page .ref-row {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "main";
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: clamp(20px, 2.6vw, 28px) clamp(20px, 3vw, 30px);
+  transition: border-color .3s var(--ease-out), background-color .3s var(--ease-out);
+}
+.resources-page .ref-row:hover, .resources-page .ref-row:focus-within { border-color: rgba(242,184,75,.45); background: var(--card-hover); }
+.resources-page .ref-row::before { content: none; }
+.resources-page .ref-index { display: none; }
+.resources-page .ref-org { font-weight: 600; margin-bottom: 8px; }
+.resources-page .ref-cta {
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  letter-spacing: 0; text-transform: none;
+}
+.resources-page .ref-desc { font-size: 16.5px; }
+
+/* events: friendly empty state card */
+.events-page .events-empty { padding: clamp(36px, 6vh, 64px) 0 0; }
+.events-page .events-panel {
+  max-width: 640px;
+  border-radius: var(--radius);
+  border-color: var(--card-border);
+  background: var(--card);
+  padding: clamp(32px, 5vw, 48px);
+}
+.events-page .events-status { color: var(--brass); letter-spacing: .12em; }
+.events-page .events-sentence { font-family: var(--font-display); font-weight: 500; max-width: 32ch; }
+.events-page .events-rule { height: 2px; border-radius: 2px; }
+
+/* newsletter: brighter signup stage */
+.newsletter-page .nl-stage {
+  background-image:
+    linear-gradient(rgba(10,18,44,.7), rgba(10,18,44,.82)),
+    url("../images/earth-night.webp");
+  margin-top: clamp(40px, 6vw, 70px);
+}
+.newsletter-page .nl-line { color: var(--ink-1); font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
+.newsletter-page .nl-lead { font-family: var(--font-body); font-size: 15px; letter-spacing: 0; text-transform: none; }
+.newsletter-page .nl-btn { font-size: 16.5px; letter-spacing: 0; padding: 16px 30px; }
+.newsletter-page .nl-readout { display: none; }

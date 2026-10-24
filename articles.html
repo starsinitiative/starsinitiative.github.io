@@ -9,11 +9,13 @@
   <meta property="og:description" content="STARS article collections: The Basics, STARS Opinions, News, Space Trash Laws, and Space Traffic Management.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="images/debris-earth.webp">
-  <meta name="theme-color" content="#04070F">
-  <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta name="theme-color" content="#0B1430">
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,340;9..144,400;9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="css/articles.css">
 </head>
@@ -22,32 +24,54 @@
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="STARS — home">
-        <img class="brand-emblem" src="images/logo-white.png" alt="" width="38" height="38">
-        <span class="brand-word">STARS</span>
+        <img class="brand-emblem" src="images/logo.svg" alt="" width="42" height="42">
+        <span class="brand-text"><span class="brand-word">STARS</span><span class="brand-sub">Space Trash Awareness &amp; Removal Solutions</span></span>
       </a>
       <nav class="site-nav" aria-label="Primary">
         <ul class="nav-list">
-        <li><a class="nav-link" data-key="home" href="index.html"><span class="nav-idx">01</span>Home</a></li>
-        <li><a class="nav-link" data-key="about" href="aboutUs.html"><span class="nav-idx">02</span>About</a></li>
-        <li><a class="nav-link" data-key="resources" href="resources.html"><span class="nav-idx">03</span>Resources</a></li>
-        <li><a class="nav-link is-active" data-key="articles" href="articles.html"><span class="nav-idx">04</span>Articles</a></li>
-        <li><a class="nav-link" data-key="events" href="events.html"><span class="nav-idx">05</span>Events</a></li>
-        <li><a class="nav-link" data-key="newsletter" href="newsletter.html"><span class="nav-idx">06</span>Newsletter</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item nav-item--drop">
+          <button class="nav-link is-active" type="button" aria-expanded="false" aria-controls="learnMenu">Learn <svg class="chev" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="nav-drop" id="learnMenu">
+            <a class="drop-link" href="thebasics.html"><strong>The Basics</strong><span>What space trash is, where it came from, and why it matters</span></a>
+            <a class="drop-link" href="starsopinions.html"><strong>STARS Opinions</strong><span>Our writers on satellites, policy, and the future of orbit</span></a>
+            <a class="drop-link" href="news.html"><strong>News</strong><span>Collisions, reentries, and how the world is responding</span></a>
+            <a class="drop-link" href="laws.html"><strong>Space Trash Laws</strong><span>The treaties and policies that govern Earth's orbits</span></a>
+            <a class="drop-link" href="management.html"><strong>Traffic Management</strong><span>Tracking, collision avoidance, and debris removal</span></a>
+            <a class="drop-link" href="resources.html"><strong>Resources</strong><span>Trusted agencies, reports, and data sources</span></a>
+            <a class="drop-all" href="articles.html">Browse all article collections <span aria-hidden="true">→</span></a>
+          </div>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="debris.html">Debris Explorer</a></li>
+        <li class="nav-item"><a class="nav-link" href="events.html">Events</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutUs.html">About</a></li>
         </ul>
-        <span class="nav-indicator" aria-hidden="true"></span>
+        <a class="btn nav-cta" href="newsletter.html">Subscribe</a>
       </nav>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
         <span></span><span></span>
       </button>
     </div>
   </header>
   <div class="mobile-menu" id="mobileMenu">
-      <a class="mm-link" href="index.html"><span class="mm-idx">01</span>Home</a>
-      <a class="mm-link" href="aboutUs.html"><span class="mm-idx">02</span>About</a>
-      <a class="mm-link" href="resources.html"><span class="mm-idx">03</span>Resources</a>
-      <a class="mm-link" href="articles.html"><span class="mm-idx">04</span>Articles</a>
-      <a class="mm-link" href="events.html"><span class="mm-idx">05</span>Events</a>
-      <a class="mm-link" href="newsletter.html"><span class="mm-idx">06</span>Newsletter</a>
+    <div class="mm-group">
+      <span class="mm-label">Explore</span>
+      <a class="mm-link" href="index.html">Home</a>
+      <a class="mm-link" href="debris.html">Debris Explorer</a>
+      <a class="mm-link" href="events.html">Events</a>
+      <a class="mm-link" href="aboutUs.html">About STARS</a>
+    </div>
+    <div class="mm-group">
+      <span class="mm-label">Learn</span>
+      <a class="mm-link" href="articles.html">All articles</a>
+      <a class="mm-link" href="thebasics.html">The Basics</a>
+      <a class="mm-link" href="starsopinions.html">STARS Opinions</a>
+      <a class="mm-link" href="news.html">News</a>
+      <a class="mm-link" href="laws.html">Space Trash Laws</a>
+      <a class="mm-link" href="management.html">Traffic Management</a>
+      <a class="mm-link" href="resources.html">Resources</a>
+    </div>
+    <a class="btn btn--solid mm-cta" href="newsletter.html">Subscribe to the newsletter</a>
   </div>
   <main id="main">
 <!-- ============ ARTICLES — THE LIBRARY (hub) ============ -->
@@ -59,11 +83,11 @@
     <h1 class="hub-title" data-reveal>Articles</h1>
     <hr class="hairline" data-reveal="fade">
     <p class="hub-readout" data-reveal="fade">
-      <span>Collections <strong>05</strong></span>
+      <span><strong>5</strong> collections</span>
       <span class="ro-sep" aria-hidden="true">·</span>
-      <span>Entries <strong>07</strong></span>
+      <span><strong>7</strong> articles</span>
       <span class="ro-sep" aria-hidden="true">·</span>
-      <span>Reserved <strong>38</strong></span>
+      <span>Written by STARS students</span>
     </p>
   </div>
 </header>
@@ -86,7 +110,7 @@
         <div class="dossier-index" data-reveal="fade">
           <span class="idx">01</span>
           <span class="rule" aria-hidden="true"></span>
-          <span class="meta">Entries 03 · Reserved 06</span>
+          <span class="meta">3 articles</span>
         </div>
         <h3 class="dossier-title" data-reveal>The Basics</h3>
         <p data-reveal>Learn the fundamental concepts of space trash, including what it is, where it came from, and why it matters.</p>
@@ -106,7 +130,7 @@
         <div class="dossier-index" data-reveal="fade">
           <span class="idx">02</span>
           <span class="rule" aria-hidden="true"></span>
-          <span class="meta">Entries 01 · Reserved 08</span>
+          <span class="meta">1 article</span>
         </div>
         <h3 class="dossier-title" data-reveal>STARS Opinions</h3>
         <p data-reveal>See what STARS authors think about current issues such as the increasing number of satellites above Earth, data centers in orbit, and space trash policies.</p>
@@ -126,7 +150,7 @@
         <div class="dossier-index" data-reveal="fade">
           <span class="idx">03</span>
           <span class="rule" aria-hidden="true"></span>
-          <span class="meta">Entries 00 · Reserved 09</span>
+          <span class="meta">Coming soon</span>
         </div>
         <h3 class="dossier-title" data-reveal>News</h3>
         <p data-reveal>Stay up to date on what’s happening in orbit and on the ground: space trash collisions, atmospheric reentries, and how the world is reacting.</p>
@@ -146,7 +170,7 @@
         <div class="dossier-index" data-reveal="fade">
           <span class="idx">04</span>
           <span class="rule" aria-hidden="true"></span>
-          <span class="meta">Entries 01 · Reserved 08</span>
+          <span class="meta">1 article</span>
         </div>
         <h3 class="dossier-title" data-reveal>Space Trash Laws</h3>
         <p data-reveal>Understand the governmental policies and international laws that govern Earth’s orbits and the trash within them.</p>
@@ -166,7 +190,7 @@
         <div class="dossier-index" data-reveal="fade">
           <span class="idx">05</span>
           <span class="rule" aria-hidden="true"></span>
-          <span class="meta">Entries 02 · Reserved 07</span>
+          <span class="meta">2 articles</span>
         </div>
         <h3 class="dossier-title" data-reveal>Space Traffic Management</h3>
         <p data-reveal>Discover the technology, procedures, and regulations used to track satellites and debris, prevent collisions, and help keep Earth’s orbits safe.</p>
@@ -187,17 +211,45 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img class="footer-emblem" src="images/logo-brass.png" alt="STARS logo" width="84" height="85">
+        <img class="footer-emblem" src="images/logo.svg" alt="STARS logo" width="64" height="64">
         <div>
           <div class="footer-word">STARS</div>
-          <div class="footer-tag">Space Trash Awareness and Removal Solutions</div>
+          <div class="footer-tag">Space Trash Awareness and Removal Solutions — a student-led initiative of the AIAA National High School Subcommittee.</div>
+          <a class="footer-mail" href="mailto:starsspacetrash.aiaa@gmail.com">starsspacetrash.aiaa@gmail.com</a>
         </div>
       </div>
-      <nav class="footer-links" aria-label="Footer">
-        <a href="aboutUs.html">About Us</a>
-        <a href="mailto:starsspacetrash.aiaa@gmail.com">Contact</a>
-        <a href="newsletter.html">Newsletter</a>
+      <nav class="footer-col" aria-label="Learn">
+        <h3>Learn</h3>
+        <ul>
+          <li><a href="thebasics.html">The Basics</a></li>
+          <li><a href="starsopinions.html">STARS Opinions</a></li>
+          <li><a href="news.html">News</a></li>
+          <li><a href="laws.html">Space Trash Laws</a></li>
+          <li><a href="management.html">Traffic Management</a></li>
+        </ul>
       </nav>
+      <nav class="footer-col" aria-label="Explore">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="debris.html">Debris Explorer</a></li>
+          <li><a href="articles.html">All Articles</a></li>
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="events.html">Events</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Organization">
+        <h3>STARS</h3>
+        <ul>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="newsletter.html">Newsletter</a></li>
+          <li><a href="https://starsspacetrash.substack.com/" target="_blank" rel="noopener">Substack ↗</a></li>
+          <li><a href="mailto:starsspacetrash.aiaa@gmail.com">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STARS · Space Trash Awareness and Removal Solutions</span>
+      <span>Imagery courtesy of NASA and ESA</span>
     </div>
   </footer>
   <script src="js/main.js" defer></script>
